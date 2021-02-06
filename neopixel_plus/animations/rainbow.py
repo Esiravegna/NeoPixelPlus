@@ -123,16 +123,12 @@ class RainbowAnimation:
                 t, i, brightness))
 
         t = t/1000
-        a = (0.5, 0.5, 0.5)
-        b = (0.5, 0.5, 0.5)
-        c = (1.0, 1.0, 1.0)
-        d = (0.00, 0.33, 0.67)
 
         k = t + 0.05 * i
 
-        r = a[0] + b[0] * math.cos(6.28318 * (c[0] * k + d[0]))
-        g = a[1] + b[1] * math.cos(6.28318 * (c[1] * k + d[1]))
-        b = a[2] + b[2] * math.cos(6.28318 * (c[2] * k + d[2]))
+        r = 0.5 + 0.5 * math.cos(6.28318 * (1.0 * k + 0.00))
+        g = 0.5 + 0.5 * math.cos(6.28318 * (1.0 * k + 0.33))
+        b = 0.5 + 0.5 * math.cos(6.28318 * (1.0 * k + 0.67))
 
         r = int(255.0 * r * brightness)
         g = int(255.0 * g * brightness)
