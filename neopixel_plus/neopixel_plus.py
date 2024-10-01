@@ -1,9 +1,10 @@
 import getopt
-import math
-import random
+import logging
 import sys
 import time
 from random import randint
+
+logger = logging.getLogger(__name__)
 
 try:
     from neopixel_plus.animations import *
@@ -20,8 +21,24 @@ class NeoPixel:
         test=False,
         overwrite_line=True,
         debug=False,
-        target="micropython",  # or 'adafruit'
+        target="micropython",
     ):
+        """
+        Initializes the NeoPixel class with the given parameters.
+
+        Args:
+            pin_num (int, optional): The GPIO pin used to control the LEDs. Defaults to
+                                     10 for MicroPython or 18 for Adafruit if not specified.
+            n (int, optional): The total number of LEDs on the strip. Defaults to 30.
+            start_led (int, optional): The starting LED position for control. Defaults to 0.
+            test (bool, optional): If True, the class operates in test mode, simulating LED control. Defaults to False.
+            overwrite_line (bool, optional): If True, overwrites existing lines in the console. Defaults to True.
+            debug (bool, optional): If True, enables debug mode. Defaults to False.
+            target (str, optional): Specifies the target platform ('micropython' or 'adafruit'). Defaults to 'micropython'.
+
+        Raises:
+            ValueError: If an unsupported platform is specified in the `target`.
+        """
         self.debug = debug
         self.target = target
         self.strip_length = n
@@ -53,48 +70,51 @@ class NeoPixel:
                 )
 
     def get_pin(self):
+        """
+        Retrieves the appropriate pin object based on the target platform (MicroPython or Adafruit).
+
+        For MicroPython, this method returns a machine.Pin object, while for Adafruit, it returns a board pin.
+
+        Returns:
+            object: A pin object corresponding to the platform (machine.Pin for MicroPython or board pin for Adafruit).
+
+        Raises:
+            ValueError: If an unsupported platform is specified in the `target`.
+        """
+        the_pin = None
         if self.target == "micropython":
             from machine import Pin
 
-            return Pin(self.pin_num, Pin.OUT)
+            the_pin = Pin(self.pin_num, Pin.OUT)
 
         elif self.target == "adafruit":
             import board
 
-            if self.pin_num == 18:
-                return board.D18
-            elif self.pin_num == 23:
-                return board.D23
-            elif self.pin_num == 24:
-                return board.D24
-            elif self.pin_num == 24:
-                return board.D24
-            elif self.pin_num == 25:
-                return board.D25
-            elif self.pin_num == 12:
-                return board.D12
-            elif self.pin_num == 16:
-                return board.D16
-            elif self.pin_num == 4:
-                return board.D4
-            elif self.pin_num == 17:
-                return board.D17
-            elif self.pin_num == 27:
-                return board.D27
-            elif self.pin_num == 22:
-                return board.D22
-            elif self.pin_num == 5:
-                return board.D5
-            elif self.pin_num == 6:
-                return board.D6
-            elif self.pin_num == 13:
-                return board.D13
-            elif self.pin_num == 26:
-                return board.D26
+            # Pin mapping for Adafruit platform
+            pin_map = {
+                18: board.D18,
+                23: board.D23,
+                24: board.D24,
+                25: board.D25,
+                12: board.D12,
+                16: board.D16,
+                4: board.D4,
+                17: board.D17,
+                27: board.D27,
+                22: board.D22,
+                5: board.D5,
+                6: board.D6,
+                13: board.D13,
+                26: board.D26,
+                19: board.D19,
+                10: board.D10,
+            }
+            the_pin = pin_map.get(self.pin_num)
+        return the_pin
 
     def get_sections(self):
         if self.debug:
-            print("NeoPixel().get_sections()")
+            logger.debug("NeoPixel().get_sections()")
 
         sections_length = 15
         sections = []
@@ -106,7 +126,7 @@ class NeoPixel:
 
     def get_led_selectors(self, sections="all"):
         if self.debug:
-            print("NeoPixel().get_led_selectors(sections={})".format(sections))
+            logger.debug("NeoPixel().get_led_selectors(sections={})".format(sections))
 
         if type(sections) == str:
             if sections == "all":
@@ -130,12 +150,12 @@ class NeoPixel:
 
     def write(self, s_after_wait=1.0 / 36.0):
         if self.debug:
-            print("NeoPixel().write(s_after_wait={})".format(s_after_wait))
+            logger.debug("NeoPixel().write(s_after_wait={})".format(s_after_wait))
 
         if self.test:
             from colr import color
 
-            print(
+            logger.debug(
                 "".join(color("  ", back=(x[0], x[1], x[2])) for x in self.leds),
                 end="\r" if self.overwrite_line and not self.debug else "\n",
             )
@@ -148,7 +168,9 @@ class NeoPixel:
 
     def insert_led(self, position=0, rgb=[0, 0, 0]):
         if self.debug:
-            print("NeoPixel().insert_led(position={},rgb={})".format(position, rgb))
+            logger.debug(
+                "NeoPixel().insert_led(position={},rgb={})".format(position, rgb)
+            )
         # save state of all leds as list, insert LED at position, then write LEDs
         leds = [[x[0], x[1], x[2]] for x in self.leds]
         leds.insert(position, rgb)
@@ -158,7 +180,7 @@ class NeoPixel:
 
     def append_led(self, rgb=[0, 0, 0]):
         if self.debug:
-            print("NeoPixel().append_led(rgb={})".format(rgb))
+            logger.debug("NeoPixel().append_led(rgb={})".format(rgb))
         # save state of all leds as list, append LED at the end, then write LEDs
         leds = [[x[0], x[1], x[2]] for x in self.leds]
         leds.append(rgb)
@@ -184,7 +206,7 @@ class NeoPixel:
 
     def get_led(self, i, start=None):
         if self.debug:
-            print("NeoPixel().get_led(i={},start={}".format(i, start))
+            logger.debug("NeoPixel().get_led(i={},start={}".format(i, start))
         i = i + self.start_led
         if i < 0:
             i += self.addressable_strip_length
@@ -195,14 +217,14 @@ class NeoPixel:
 
     def off(self):
         if self.debug:
-            print("NeoPixel().off()")
+            logger.debug("NeoPixel().off()")
         for i in range(self.strip_length):
             self.leds[i] = (0, 0, 0)
         self.write()
 
     def on(self, num=None):
         if self.debug:
-            print("NeoPixel().on(num={})".format(num))
+            logger.debug("NeoPixel().on(num={})".format(num))
         if type(num) == int:
             num = self.get_led(num)
             self.leds[num] = (255, 255, 255)
@@ -213,7 +235,7 @@ class NeoPixel:
 
     def test_animations(self):
         # run all the animations for testing
-        print("Start testing animations...")
+        logger.debug("Start testing animations...")
         while True:
             self.rainbow_animation(loop_limit=2)
 
@@ -238,7 +260,7 @@ class NeoPixel:
         customization_json={},
     ):
         try:
-            print("color:")
+            logger.debug("color:")
             original_r = (
                 customization_json["rgb_colors"][0][0]
                 if customization_json and "rgb_colors" in customization_json
@@ -279,7 +301,7 @@ class NeoPixel:
 
             import sys
 
-            print()
+            logger.debug()
             sys.exit(0)
 
     def rainbow_animation(
@@ -551,7 +573,7 @@ if __name__ == "__main__":
             ["test=", "target=", "n=", "animation=", "customization="],
         )
     except getopt.GetoptError:
-        print(
+        logger.debug(
             "neopixel_plus.py -t <test> -d <target> -n <n> -a <animation> -c <customization>"
         )
         sys.exit(2)

@@ -1,9 +1,11 @@
 import time
+import logging
 
 try:
     from neopixel_plus.helper import Color
 except ImportError:
     from helper import Color
+logger = logging.getLogger(__name__)
 
 
 class MovingDot:
@@ -40,7 +42,7 @@ class MovingDot:
 
     def create_dot(self):
         if self.led_strip.debug:
-            print("MovingDot().create_dot()")
+            logger.debug("MovingDot().create_dot()")
 
         self.dot = [self.colors.black] * 5
 
@@ -55,7 +57,7 @@ class MovingDot:
 
     def change_direction(self):
         if self.led_strip.debug:
-            print("MovingDot().change_direction()")
+            logger.debug("MovingDot().change_direction()")
 
         if self.start == "start":
             self.start = "end"
@@ -64,7 +66,7 @@ class MovingDot:
 
     def move_dot(self):
         if self.led_strip.debug:
-            print("MovingDot().move_dot()")
+            logger.debug("MovingDot().move_dot()")
 
         # move dot into view
         for selected in self.selector[self.start]:
@@ -91,9 +93,9 @@ class MovingDot:
 
     def glow(self):
         if self.led_strip.debug:
-            print("MovingDot().glow()")
+            logger.debug("MovingDot().glow()")
 
-        print("Moving dot:")
+        logger.debug("Moving dot:")
         try:
             # make sure leds are off
             self.led_strip.off()
@@ -123,7 +125,7 @@ class MovingDot:
 
                 self.loops += 1
                 if self.loop_limit and self.loop_limit == self.loops:
-                    print()
+                    logger.debug()
                     break
 
         except KeyboardInterrupt:
@@ -131,5 +133,5 @@ class MovingDot:
 
             import sys
 
-            print()
+            logger.debug()
             sys.exit(0)

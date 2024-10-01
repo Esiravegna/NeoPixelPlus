@@ -1,5 +1,8 @@
+import logging
 import time
 from os import name
+
+logger = logging.getLogger(__name__)
 
 try:
     from neopixel_plus.helper import Color
@@ -38,9 +41,9 @@ class Transition:
 
     def glow(self):
         if self.led_strip.debug:
-            print("Transition().glow()")
+            logger.debug("Transition().glow()")
 
-        print("Transition:")
+        logger.debug("Transition:")
         try:
             # make sure leds are off
             self.led_strip.off()
@@ -98,7 +101,7 @@ class Transition:
 
                 self.loops += 1
                 if self.loop_limit and self.loop_limit == self.loops:
-                    print()
+                    logger.debug()
                     break
 
         except KeyboardInterrupt:
@@ -106,5 +109,5 @@ class Transition:
 
             import sys
 
-            print()
+            logger.debug()
             sys.exit(0)

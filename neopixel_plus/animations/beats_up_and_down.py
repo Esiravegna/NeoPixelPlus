@@ -1,9 +1,11 @@
 import time
+import logging
 
 try:
     from neopixel_plus.helper import Color
 except ImportError:
     from helper import Color
+logger = logging.getLogger(__name__)
 
 
 class BeatsUpAndDown:
@@ -63,7 +65,7 @@ class BeatsUpAndDown:
 
     def color_leds(self):
         if self.led_strip.debug:
-            print("BeatsUpAndDown().color_leds()")
+            logger.debug("BeatsUpAndDown().color_leds()")
 
         # color LEDs
         for i in self.selected_leds[: self.selected_leds_counter_up]:
@@ -119,7 +121,7 @@ class BeatsUpAndDown:
 
     def make_leds_black(self):
         if self.led_strip.debug:
-            print("BeatsUpAndDown().make_leds_black()")
+            logger.debug("BeatsUpAndDown().make_leds_black()")
 
         # then make them black
         for i in self.selected_leds[self.selected_leds_counter_down :]:
@@ -143,9 +145,9 @@ class BeatsUpAndDown:
 
     def glow(self):
         if self.led_strip.debug:
-            print("BeatsUpAndDown().glow()")
+            logger.debug("BeatsUpAndDown().glow()")
 
-        print("Beats up and down:")
+        logger.debug("Beats up and down:")
         try:
             # make sure leds are off
             self.led_strip.off()
@@ -166,12 +168,12 @@ class BeatsUpAndDown:
 
                 self.loops += 1
                 if self.loop_limit and self.loop_limit == self.loops:
-                    print()
+                    logger.debug()
                     break
         except KeyboardInterrupt:
             self.led_strip.fadeout()
 
             import sys
 
-            print()
+            logger.debug()
             sys.exit(0)

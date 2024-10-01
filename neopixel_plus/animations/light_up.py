@@ -1,9 +1,12 @@
 import time
+import logging
 
 try:
     from neopixel_plus.helper import Color
 except ImportError:
     from helper import Color
+
+logger = logging.getLogger(__name__)
 
 
 class LightUp:
@@ -35,7 +38,7 @@ class LightUp:
         )
 
     def glow(self):
-        print("Light up:")
+        logger.debug("Light up:")
         try:
             # make sure leds are off
             self.led_strip.off()
@@ -79,7 +82,7 @@ class LightUp:
 
                 self.loops += 1
                 if self.loop_limit and self.loop_limit == self.loops:
-                    print()
+                    logger.debug()
                     break
 
         except KeyboardInterrupt:
@@ -87,5 +90,5 @@ class LightUp:
 
             import sys
 
-            print()
+            logger.debug()
             sys.exit(0)

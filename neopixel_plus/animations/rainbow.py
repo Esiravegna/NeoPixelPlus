@@ -1,3 +1,4 @@
+import logging
 import math
 import time
 
@@ -18,7 +19,7 @@ class RainbowAnimation:
 
     def set_time_passed_ms(self):
         if self.led_strip.debug:
-            print("RainbowAnimation().set_time_passed_ms()")
+            logger.debug("RainbowAnimation().set_time_passed_ms()")
 
         # if duration 1000 ms = 17 loops * 60ms
         # if duration 500 ms = 8.5 loops 120ms
@@ -33,7 +34,7 @@ class RainbowAnimation:
 
     def set_brightness(self, counter, max_counter):
         if self.led_strip.debug:
-            print(
+            logger.debug(
                 "RainbowAnimation().set_brightness(counter={},max_counter={})".format(
                     counter, max_counter
                 )
@@ -56,7 +57,7 @@ class RainbowAnimation:
 
     def get_max_counter(self):
         if self.led_strip.debug:
-            print("RainbowAnimation().get_max_counter()")
+            logger.debug("RainbowAnimation().get_max_counter()")
 
         # if duration 1000 ms = 17 loops * 60ms
         # if duration 500 ms = 8.5 loops 120ms
@@ -69,9 +70,9 @@ class RainbowAnimation:
 
     def glow(self):
         if self.led_strip.debug:
-            print("RainbowAnimation().glow()")
+            logger.debug("RainbowAnimation().glow()")
 
-        print("Rainbow:")
+        logger.debug("Rainbow:")
         try:
             # if duration, need to adapt time_passed to make one full color loop (and then pause if pause set)
             # turn LEDs rainbow
@@ -94,7 +95,7 @@ class RainbowAnimation:
                     loops += 1
 
                     if self.loop_limit and self.loop_limit == loops:
-                        print()
+                        logger.debug()
                         break
 
                 else:
@@ -116,12 +117,12 @@ class RainbowAnimation:
 
             import sys
 
-            print()
+            logger.debug()
             sys.exit(0)
 
     def rainbow_color(self, t, i, brightness):
         if self.led_strip.debug:
-            print(
+            logger.debug(
                 "RainbowAnimation().rainbow_color(t={},i={},brightness={})".format(
                     t, i, brightness
                 )

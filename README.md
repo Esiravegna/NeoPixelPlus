@@ -13,7 +13,7 @@ Want to support the development and stay updated?
 
 3. [NeoPixel class](#neopixel-class)
 
-    - [pin](#neopixel_pin)
+    - [pin_num](#neopixel_pin)
 
     - [n](#neopixel_n)
 
@@ -183,7 +183,7 @@ sudo ./pyvenv/bin/python
 from neopixel_plus import NeoPixel
 
 # Example 1 - Changing the color of a physical LED
-pixel = NeoPixel(pin=5, n=30)
+pixel = NeoPixel(pin_num=5, n=30)
 pixel.leds[0] = (219,100,222)
 pixel.write()
 
@@ -191,7 +191,7 @@ pixel.write()
 NeoPixel(test=True).rainbow_animation()
 
 # Example 3 - Playing a rainbow animation on physical LEDs
-NeoPixel(pin=5, n=30).rainbow_animation()
+NeoPixel(pin_num=5, n=30).rainbow_animation()
 
 ```
 ## NeoPixel class
