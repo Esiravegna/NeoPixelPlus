@@ -2,20 +2,30 @@ import random
 
 
 class Color:
-    def __init__(self, rgb_colors, brightness=1, brightness_fixed=False, num_random_colors=5):
-        self.rgb_colors = rgb_colors if rgb_colors else self.random_set(
-            num_random_colors)
+    def __init__(
+        self, rgb_colors, brightness=1, brightness_fixed=False, num_random_colors=5
+    ):
+        self.rgb_colors = (
+            rgb_colors if rgb_colors else self.random_set(num_random_colors)
+        )
         self.selected_num = 0
-        self.selected_max = len(self.rgb_colors)-1
+        self.selected_max = len(self.rgb_colors) - 1
         # make sure self.rgb_colors is a list and self.rgb_colors[self.selected_num] is also a list
-        if type(self.rgb_colors) == list and type(self.rgb_colors[self.selected_num]) == list:
+        if (
+            type(self.rgb_colors) == list
+            and type(self.rgb_colors[self.selected_num]) == list
+        ):
             self.base_color = self.rgb_colors[self.selected_num]
         else:
             print(
-                'self.rgb_colors and self.rgb_colors[self.selected_num] must be lists. Currently:')
-            print('self.rgb_colors: {}'.format(self.rgb_colors))
-            print('self.rgb_colors[self.selected_num]: {}'.format(
-                self.rgb_colors[self.selected_num]))
+                "self.rgb_colors and self.rgb_colors[self.selected_num] must be lists. Currently:"
+            )
+            print("self.rgb_colors: {}".format(self.rgb_colors))
+            print(
+                "self.rgb_colors[self.selected_num]: {}".format(
+                    self.rgb_colors[self.selected_num]
+                )
+            )
             raise
         self.brightness = brightness
         self.brightness_max = brightness
@@ -35,7 +45,7 @@ class Color:
         return [random.randint(1, 255), random.randint(1, 255), random.randint(1, 255)]
 
     def random_set(self, how_many):
-        array = [0]*how_many
+        array = [0] * how_many
         return [self.random() for x in array]
 
     def correct(self):
@@ -43,8 +53,11 @@ class Color:
         g = int(self.base_color[1] * self.brightness)
         b = int(self.base_color[2] * self.brightness)
 
-        self.selected = [r if r < 255 else 255, g if g <
-                         255 else 255, b if b < 255 else 255]
+        self.selected = [
+            r if r < 255 else 255,
+            g if g < 255 else 255,
+            b if b < 255 else 255,
+        ]
 
     def next(self):
         # select next color from self.rgb_colors, with correct brightness
